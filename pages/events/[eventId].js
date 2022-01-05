@@ -1,15 +1,12 @@
 import React, { Fragment } from "react";
-import { useRouter } from "next/router";
-import { getEventById } from "../../dummy-data";
-import EventSummary from "../../components/event-detail/event-summary";
-import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
+import EventLogistics from "../../components/event-detail/event-logistics";
+import EventSummary from "../../components/event-detail/event-summary";
 import ErrorAlert from "../../components/events/error-alert";
+import { getEventById, getAllEvents } from "../../helpers/api-util";
 
-const EventDetailPage = () => {
-  const router = useRouter();
-  const eventId = router.query.eventId;
-  const event = getEventById(eventId);
+const EventDetailPage = ({selectedEvent}) => {
+  const event = selectedEvent
 
   console.log(event);
 
@@ -36,5 +33,27 @@ const EventDetailPage = () => {
     </Fragment>
   );
 };
+
+export async function getStaticProps(context) {
+  const eventId = context.params.eventId
+
+  const event = await getEventById(eventId);
+  return {
+    props: {
+      selectedEvent: event
+    }
+  }
+}
+
+export async function getStaticPaths() {
+  const events = await getAllEvents();
+
+  const paths = events.map(event => ({params: {eventId: event.id}}))
+
+  return {
+    paths: paths,
+    fallback: false //if fallback is false, with the unknown id page will redirect to 404 page 
+  }
+}
 
 export default EventDetailPage;
