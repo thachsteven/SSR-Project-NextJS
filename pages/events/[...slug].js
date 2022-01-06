@@ -34,21 +34,9 @@ const FilteredEventsPage = (props) => {
     }
   }, [data]);
 
-  const filteredYear = filterData[0];
-  const filteredMonth = filterData[1];
+  
 
-  const numYear = +filteredYear;
-  const numMonth = +filteredMonth;
-
-  const pageHeadData = (
-    <Head>
-      <title>Filtered Events</title>
-      <meta
-        name="description"
-        content={`All events for ${numMonth} / ${numYear}`}
-      />
-    </Head>
-  );
+  
 
   if (!loadedEvents) {
     return <Fragment >
@@ -57,7 +45,29 @@ const FilteredEventsPage = (props) => {
     </Fragment>
   }
 
-  
+  const filteredYear = filterData[0];
+  const filteredMonth = filterData[1];
+
+  const numYear = +filteredYear;
+  const numMonth = +filteredMonth;
+
+  let pageHeadData = <Head >
+    <title>Filtered Events</title>
+      <meta
+        name="description"
+        content={`A list of filtered events.`}
+      />
+  </Head>
+
+  pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name="description"
+        content={`All events for ${numMonth} / ${numYear}`}
+      />
+    </Head>
+  );
 
   if (
     isNaN(numYear) ||
