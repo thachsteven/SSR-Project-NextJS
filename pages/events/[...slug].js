@@ -34,15 +34,30 @@ const FilteredEventsPage = (props) => {
     }
   }, [data]);
 
-  if (!loadedEvents) {
-    return <p className="center">Loading...</p>;
-  }
-
   const filteredYear = filterData[0];
   const filteredMonth = filterData[1];
 
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
+
+  const pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name="description"
+        content={`All events for ${numMonth} / ${numYear}`}
+      />
+    </Head>
+  );
+
+  if (!loadedEvents) {
+    return <Fragment >
+      {pageHeadData}
+      <p className="center">Loading...</p>;
+    </Fragment>
+  }
+
+  
 
   if (
     isNaN(numYear) ||
@@ -50,10 +65,12 @@ const FilteredEventsPage = (props) => {
     numYear > 2023 ||
     numYear < 2021 ||
     numMonth < 1 ||
-    numMonth > 12 || error
+    numMonth > 12 ||
+    error
   ) {
     return (
       <Fragment>
+        {pageHeadData}
         <ErrorAlert>
           <p>Invalid filter.</p>
         </ErrorAlert>
@@ -75,6 +92,7 @@ const FilteredEventsPage = (props) => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <Fragment>
+        {pageHeadData}
         <ErrorAlert>
           <p>No events found for chosen filter!</p>
         </ErrorAlert>
@@ -89,15 +107,7 @@ const FilteredEventsPage = (props) => {
 
   return (
     <Fragment>
-
-      <Head>
-        <title>Filtered Events</title>
-        <meta
-          name="description"
-          content={`All events for ${numMonth} / ${numYear}`}
-        />
-      </Head>
-
+      {pageHeadData}
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
     </Fragment>
